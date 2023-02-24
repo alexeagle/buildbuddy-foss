@@ -19,9 +19,6 @@ import (
 	"github.com/buildbuddy-io/buildbuddy/server/version"
 	"google.golang.org/protobuf/encoding/protojson"
 
-	iss_config "github.com/buildbuddy-io/buildbuddy/enterprise/server/invocation_stat_service/config"
-	remote_execution_config "github.com/buildbuddy-io/buildbuddy/enterprise/server/remote_execution/config"
-	scheduler_server_config "github.com/buildbuddy-io/buildbuddy/enterprise/server/scheduling/scheduler_server/config"
 	cfgpb "github.com/buildbuddy-io/buildbuddy/proto/config"
 )
 
@@ -138,16 +135,11 @@ func serveIndexTemplate(env environment.Env, tpl *template.Template, version, js
 		GithubEnabled:                 github.Enabled(),
 		AnonymousUsageEnabled:         env.GetAuthenticator().AnonymousUsageEnabled(),
 		TestDashboardEnabled:          target_tracker.TargetTrackingEnabled(),
-		UserOwnedExecutorsEnabled:     remote_execution_config.RemoteExecutionEnabled() && scheduler_server_config.UserOwnedExecutorsEnabled(),
-		ExecutorKeyCreationEnabled:    remote_execution_config.RemoteExecutionEnabled() && *enableExecutorKeyCreation,
-		WorkflowsEnabled:              remote_execution_config.RemoteExecutionEnabled() && *enableWorkflows,
 		CodeEditorEnabled:             *codeEditorEnabled,
-		RemoteExecutionEnabled:        remote_execution_config.RemoteExecutionEnabled(),
 		SsoEnabled:                    env.GetAuthenticator().SSOEnabled(),
 		GlobalFilterEnabled:           true,
 		UsageEnabled:                  *usageEnabled,
 		UserManagementEnabled:         *userManagementEnabled,
-		ForceUserOwnedDarwinExecutors: remote_execution_config.RemoteExecutionEnabled() && scheduler_server_config.ForceUserOwnedDarwinExecutors(),
 		TestGridV2Enabled:             *testGridV2Enabled,
 		DetailedCacheStatsEnabled:     hit_tracker.DetailedStatsEnabled(),
 		ExpandedSuggestionsEnabled:    *expandedSuggestionsEnabled,
@@ -155,7 +147,6 @@ func serveIndexTemplate(env environment.Env, tpl *template.Template, version, js
 		SecretsEnabled:                env.GetSecretService() != nil,
 		TestOutputManifestsEnabled:    *testOutputManifestsEnabled,
 		UserOwnedKeysEnabled:          *userOwnedKeysEnabled,
-		TrendsHeatmapEnabled:          iss_config.TrendsHeatmapEnabled() && env.GetOLAPDBHandle() != nil,
 	}
 
 	configJSON, err := protojson.Marshal(&config)

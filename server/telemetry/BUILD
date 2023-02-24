@@ -4,9 +4,8 @@ go_library(
     name = "telemetry",
     srcs = ["telemetry_client.go"],
     importpath = "github.com/buildbuddy-io/buildbuddy/server/telemetry",
-    visibility = ["//visibility:public"],
+    visibility = ["//visibility:private"],
     deps = [
-        "//enterprise/server/remote_execution/config",
         "//proto:telemetry_go_proto",
         "//server/backends/blobstore",
         "//server/endpoint_urls/build_buddy_url",

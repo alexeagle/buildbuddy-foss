@@ -6,7 +6,6 @@ import (
 	"github.com/buildbuddy-io/buildbuddy/server/config"
 	"github.com/buildbuddy-io/buildbuddy/server/janitor"
 	"github.com/buildbuddy-io/buildbuddy/server/libmain"
-	"github.com/buildbuddy-io/buildbuddy/server/telemetry"
 	"github.com/buildbuddy-io/buildbuddy/server/util/healthcheck"
 	"github.com/buildbuddy-io/buildbuddy/server/util/log"
 	"github.com/buildbuddy-io/buildbuddy/server/version"
@@ -32,10 +31,6 @@ func main() {
 
 	healthChecker := healthcheck.NewHealthChecker(*serverType)
 	env := libmain.GetConfiguredEnvironmentOrDie(healthChecker)
-
-	telemetryClient := telemetry.NewTelemetryClient(env)
-	telemetryClient.Start()
-	defer telemetryClient.Stop()
 
 	cleanupService := janitor.NewJanitor(env)
 	cleanupService.Start()

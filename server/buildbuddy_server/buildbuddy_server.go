@@ -17,7 +17,6 @@ import (
 	"github.com/buildbuddy-io/buildbuddy/server/endpoint_urls/build_buddy_url"
 	"github.com/buildbuddy-io/buildbuddy/server/endpoint_urls/cache_api_url"
 	"github.com/buildbuddy-io/buildbuddy/server/endpoint_urls/events_api_url"
-	"github.com/buildbuddy-io/buildbuddy/server/endpoint_urls/remote_exec_api_url"
 	"github.com/buildbuddy-io/buildbuddy/server/environment"
 	"github.com/buildbuddy-io/buildbuddy/server/eventlog"
 	"github.com/buildbuddy-io/buildbuddy/server/interfaces"
@@ -34,7 +33,6 @@ import (
 	"github.com/buildbuddy-io/buildbuddy/server/util/status"
 	"google.golang.org/protobuf/proto"
 
-	remote_execution_config "github.com/buildbuddy-io/buildbuddy/enterprise/server/remote_execution/config"
 	akpb "github.com/buildbuddy-io/buildbuddy/proto/api_key"
 	bzpb "github.com/buildbuddy-io/buildbuddy/proto/bazel_config"
 	capb "github.com/buildbuddy-io/buildbuddy/proto/cache"
@@ -768,14 +766,6 @@ func (s *BuildBuddyServer) GetBazelConfig(ctx context.Context, req *bzpb.GetBaze
 			cacheAPIURL = assembleURL(req.Host, "grpc:", grpcPort)
 		}
 		configOptions = append(configOptions, makeConfigOption("build", "remote_cache", cacheAPIURL))
-	}
-
-	if remote_execution_config.RemoteExecutionEnabled() {
-		remoteExecutionAPIURL := remote_exec_api_url.String()
-		if remoteExecutionAPIURL == "" {
-			remoteExecutionAPIURL = assembleURL(req.Host, "grpc:", grpcPort)
-		}
-		configOptions = append(configOptions, makeConfigOption("build", "remote_executor", remoteExecutionAPIURL))
 	}
 
 	credentials := make([]*bzpb.Credentials, len(groupAPIKeys))
